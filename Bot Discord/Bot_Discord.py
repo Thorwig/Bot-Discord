@@ -42,6 +42,11 @@ class BOTMOUADTEST(commands.Bot):
         if ctx.content.startswith("!insulte soumiya"):
             Usernames = ['Soumiya 97ba ','Soumiya kathezou ','Soumiya kan7wiha ','Gangbang Soumiya à 16h ','Site pour voir le bukkake de Soumiya : www.bukakesoumiya.com ',"C'est bon frère, laisse la tranquille ",'Ntm toi aussi, respecte ','Le WAY WOOOO ']
             await ctx.channel.send(''.join(random.choice(Usernames)))
+        if ctx.content.startswith("eske"):
+            choice = ['Oui', 'Non']
+            await ctx.channel.send(''.join(random.choice(choice)))
+
 
 bot = BOTMOUADTEST()
 bot.run("OTMyMDUwOTk3MjYwNDc2NDQ2.YeNWIg.4lm4AGaTPAA4X4sNvN9NDRLcMaw")
+
