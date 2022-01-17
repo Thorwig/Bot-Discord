@@ -54,14 +54,15 @@ async def eske(ctx):
 
 ################################################ Commandes musique #####################################################
 
-@client.command(name="join",help="Rejoins le channel vocal")
+@client.command(name='join', help='Tells the bot to join the voice channel')
 async def join(ctx):
     if not ctx.message.author.voice:
-        await ctx.send("{} n'est pas connecté à un channel vocal".format(ctx.message.author.name))
+        await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
         return
     else:
-        channel = ctx.author.voice.channel
-        await channel.connect()
+        channel = ctx.message.author.voice.channel
+    await channel.connect()
+
 
 @client.command(name="leave",help="Quitte le channel vocal")
 async def leave(ctx):
@@ -69,6 +70,44 @@ async def leave(ctx):
     if voice_client.is_connected():
         await voice_client.disconnect()
     else:
-        await ctx.send("The bot is not connected to a voice channel.")
+        await ctx.send("Le bot n'est pas connecté à un channel vocal")
+
+@client.command(name='play', help='Choisis la musique et la joue')
+async def play(ctx,url):
+    try :
+        server = ctx.message.guild
+        voice_channel = server.voice_client
+
+        async with ctx.typing():
+            filename = await YTDLSource.from_url(url, loop=bot.loop)
+            voice_channel.play(discord.FFmpegPCMAudio(executable="ffmpeg.exe", source=filename))
+        await ctx.send('**Now playing:** {}'.format(filename))
+    except:
+        await ctx.send("Le bot n'est pas connecté à un channel vocal")
+
+
+@client.command(name='pause', help='Mettre pause')
+async def pause(ctx):
+    voice_client = ctx.message.guild.voice_client
+    if voice_client.is_playing():
+        await voice_client.pause()
+    else:
+        await ctx.send("Le bot n'est pas connecté à un channel vocal")
+    
+@client.command(name='resume', help='Continuer la musique')
+async def resume(ctx):
+    voice_client = ctx.message.guild.voice_client
+    if voice_client.is_paused():
+        await voice_client.resume()
+    else:
+        await ctx.send("Aucune musique n'est dans la queue")
+
+@client.command(name='stop', help='Arrêter la musique')
+async def stop(ctx):
+    voice_client = ctx.message.guild.voice_client
+    if voice_client.is_playing():
+        await voice_client.stop()
+    else:
+        await ctx.send("Le bot ne joue rien en ce moment")
 
 client.run("OTMyMDUwOTk3MjYwNDc2NDQ2.YeNWIg.4lm4AGaTPAA4X4sNvN9NDRLcMaw")
