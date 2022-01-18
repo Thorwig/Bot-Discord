@@ -2,9 +2,17 @@ import discord
 from discord.ext import commands,tasks
 import os
 import random
-import youtube_dl
+from youtube_dl import YoutubeDL
+from dotenv import load_dotenv
+from discord.utils import get
+from discord import FFmpegPCMAudio
+from discord import TextChannel
+from os import system
+
+
 
 client = commands.Bot(command_prefix = '_m ')
+players = {}
 
 
 @client.event
@@ -19,7 +27,7 @@ async def chkounwldl97ba(ctx):
     Usernames = ['Moet ','Pipsou ','Doksi ','Utakata ','Way Wooo ','Moquet ','Bizar ','Mgeder ']
     await ctx.send(''.join(random.choice(Usernames)))
 
-@client.command(name="c'est le",help="C'est qui ce mec")
+@client.command(help="C'est qui ce mec")
 async def cestle(ctx):
     await ctx.send('WAY WOOOOO')
 
@@ -55,12 +63,12 @@ async def eske(ctx):
 
 @client.command(name='join', help='Tells the bot to join the voice channel')
 async def join(ctx):
-    if not ctx.message.author.voice:
-        await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
-        return
+    channel = ctx.message.author.voice.channel
+    voice = get(client.voice_clients, guild=ctx.guild)
+    if voice and voice.is_connected():
+        await voice.move_to(channel)
     else:
-        channel = ctx.message.author.voice.channel
-    await channel.connect()
+        voice = await channel.connect()
 
 
 @client.command(name="leave",help="Quitte le channel vocal")
@@ -71,80 +79,48 @@ async def leave(ctx):
     else:
         await ctx.send("Le bot n'est pas connecté à un channel vocal")
 
-@client.command(name='play', help='Choisis la musique et la joue')
-async def play(ctx,url):
-    try :
-        server = ctx.message.guild
-        voice_channel = server.voice_client
+@client.command(pass_context = True)
+async def play(ctx, url):
+    YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
+    FFMPEG_OPTIONS = {
+        'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+    voice = get(client.voice_clients, guild=ctx.guild)
 
-        async with ctx.typing():
-            filename = await YTDLSource.from_url(url, loop=bot.loop)
-            voice_channel.play(discord.FFmpegPCMAudio(executable="ffmpeg.exe", source=filename))
-        await ctx.send('**Now playing:** {}'.format(filename))
-    except:
-        await ctx.send("Le bot n'est pas connecté à un channel vocal")
-
-
-@client.command(name='pause', help='Mettre pause')
-async def pause(ctx):
-    voice_client = ctx.message.guild.voice_client
-    if voice_client.is_playing():
-        await voice_client.pause()
+    if not voice.is_playing():
+        with YoutubeDL(YDL_OPTIONS) as ydl:
+            info = ydl.extract_info(url, download=False)
+        URL = info['url']
+        voice.play(FFmpegPCMAudio(URL, **FFMPEG_OPTIONS))
+        voice.is_playing()
+        await ctx.send('Ecoute ce banger')
     else:
-        await ctx.send("Le bot n'est pas connecté à un channel vocal")
+        await ctx.send("T'as déja de la musique.\nPq tu me casse les couilles")
+        return
+
+@client.command(name='pause', help='Mettre en pause')
+async def pause(ctx):
+    voice = get(client.voice_clients, guild=ctx.guild)
+
+    if voice.is_playing():
+        voice.pause()
+        await ctx.send("Me dis pas quoi faire fdp")
     
 @client.command(name='resume', help='Continuer la musique')
 async def resume(ctx):
-    voice_client = ctx.message.guild.voice_client
-    if voice_client.is_paused():
-        await voice_client.resume()
-    else:
-        await ctx.send("Aucune musique n'est dans la queue")
+    voice = get(client.voice_clients, guild=ctx.guild)
+
+    if not voice.is_playing():
+        voice.resume()
+        await ctx.send('Ecoute moi ce banger')
 
 @client.command(name='stop', help='Arrêter la musique')
 async def stop(ctx):
-    voice_client = ctx.message.guild.voice_client
-    if voice_client.is_playing():
-        await voice_client.stop()
-    else:
-        await ctx.send("Le bot ne joue rien en ce moment")
+    voice = get(client.voice_clients, guild=ctx.guild)
 
-youtube_dl.utils.bug_reports_message = lambda: ''
+    if voice.is_playing():
+        voice.stop()
+        await ctx.send('Ok Jaret')
 
-ytdl_format_options = {
-    'format': 'bestaudio/best',
-    'restrictfilenames': True,
-    'noplaylist': True,
-    'nocheckcertificate': True,
-    'ignoreerrors': False,
-    'logtostderr': False,
-    'quiet': True,
-    'no_warnings': True,
-    'default_search': 'auto',
-    'source_address': '0.0.0.0'
-}
-
-ffmpeg_options = {
-    'options': '-vn'
-}
-
-ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
-
-class YTDLSource(discord.PCMVolumeTransformer):
-    def __init__(self, source, *, data, volume=0.5):
-        super().__init__(source, volume)
-        self.data = data
-        self.title = data.get('title')
-        self.url = ""
-
-    @classmethod
-    async def from_url(cls, url, *, loop=None, stream=False):
-        loop = loop or asyncio.get_event_loop()
-        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
-        if 'entries' in data:
-            data = data['entries'][0]
-        filename = data['title'] if stream else ytdl.prepare_filename(data)
-        return filename
 
 
 client.run("OTMyMDUwOTk3MjYwNDc2NDQ2.YeNWIg.4lm4AGaTPAA4X4sNvN9NDRLcMaw")
