@@ -3,16 +3,17 @@ from discord.ext import commands,tasks
 import os
 import random
 from youtube_dl import YoutubeDL
-from dotenv import load_dotenv
 from discord.utils import get
 from discord import FFmpegPCMAudio
 from discord import TextChannel
-from os import system
+from itertools import cycle
 
 
 
 client = commands.Bot(command_prefix = '_m ')
 players = {}
+
+Usernames_debauche = ['Moet ','Pipsou ','Doksi ','Utakata ','Way Wooo ','Moquet ','Bizar ','Mgeder ']
 
 
 @client.event
@@ -24,8 +25,8 @@ async def on_ready():
 
 @client.command(name="chkounwldl97ba",help="Qui est le plus gros fdp de ce groupe ?")
 async def chkounwldl97ba(ctx):
-    Usernames = ['Moet ','Pipsou ','Doksi ','Utakata ','Way Wooo ','Moquet ','Bizar ','Mgeder ']
-    await ctx.send(''.join(random.choice(Usernames)))
+    
+    await ctx.send(''.join(random.choice(Usernames_debauche)))
 
 @client.command(help="C'est qui ce mec")
 async def cestle(ctx):
@@ -33,13 +34,13 @@ async def cestle(ctx):
 
 @client.command(name="chien",help="ouaf ouaf boula")
 async def chien(ctx):
-    await ctx.send('pipi')
+    rep =['pipi','ouaf ouaf boula']
+    await ctx.send(''.join(random.choice(rep)))
 
 @client.command(name="teamlol",help="Les 5 mecs qui vont jouer")
 async def teamlol(ctx):
-    Usernames = ['Moet ','Pipsou ','Doksi ','Utakata ','Way ','Moquet ','Bizar ','Mgeder ']
-    random.shuffle(Usernames)
-    await ctx.send(Usernames[i] for i in range (5))
+    random.shuffle(Usernames_debauche)
+    await ctx.send(Usernames_debauche[i] for i in range (5))
 
 @client.command(name="supprimer",help="Entrez le nombre de messages à supprimer")
 async def supprimer(ctx, nombre_messages: int):
@@ -50,14 +51,26 @@ async def supprimer(ctx, nombre_messages: int):
 
 @client.command(name="insulte",help="Insulte un mec du groupe")
 async def insulte(ctx, arg: str):
-    Usernames = [arg + ' 97ba', arg + ' kathezou', arg + ' wld l97ba','Gangbang ' + arg + ' à 16h']
-    await ctx.send(''.join(random.choice(Usernames)))
+    insultes = [arg + ' 97ba', arg + ' kathezou', arg + ' wld l97ba','Gangbang ' + arg + ' à 16h','gneu gneu gneu respire frère', 'Non jtm pas toi']
+    await ctx.send(''.join(random.choice(insultes)))
 
 @client.command(name="eske",help="Est-ce que ... ?")
 async def eske(ctx):
     choice = ['Oui', 'Non']
     await ctx.send(''.join(random.choice(choice)))
 
+@client.command(name="dinguerie",help="Balance une dinguerie")
+async def dinguerie(ctx):
+    dingueries = ['Je pisse sur tout le monde dans ce groupe à part Mouad, mon roi, mon créateur',
+              'Rappel du jour: Doxy est un être détestable qui va te rabaisser pour se sentir existant',
+              'Deuxième rappel du jour: Doxy vole les blagues de tout le monde pour se sentir drôle',
+              'Rappel du jour: Mangez 5 fruits et légumes par jour et pas 5 big mac pas vrai Amoket',
+              'Qui suis-je? Je suis un dictateur ayant vécu au 21ème siècle, je bande sur des filles mineures aux gros seins et je me moque des handicapés.\nEh non je suis pas Momosix. Je suis Utakata',
+              "Palmarès poupa: j'ai baisé un oreiller devant 10 personnes",
+              "Palmarès soulmore: j'ai zoulou 30 meufs hier pendant que biz filmait. Foutaises ",
+              "Thorwig, tu m'as créer à la place de rechercher un stage. C'est bien papa, tu sais déjà que tu vas redoubler comme l'autre con la",
+              "Bonjour, NEGRO SALE NEGRO KHANEZ NEGRO PUE YEKH"]
+    await ctx.send(''.join(random.choice(dingueries)))
 
 ################################################ Commandes musique #####################################################
 
@@ -77,7 +90,7 @@ async def leave(ctx):
     if voice_client.is_connected():
         await voice_client.disconnect()
     else:
-        await ctx.send("Le bot n'est pas connecté à un channel vocal")
+        await ctx.send("Toi dégage sale chien")
 
 @client.command(pass_context = True)
 async def play(ctx, url):
@@ -120,6 +133,16 @@ async def stop(ctx):
     if voice.is_playing():
         voice.stop()
         await ctx.send('Ok Jaret')
+
+################################################ Messages réguliers #####################################################
+
+
+################################################ Signalement erreurs #####################################################
+
+@client.event
+async def on_command_error(ctx,error):
+    if isinstance(error,commands.MissingRequiredArgument):
+        await ctx.send('ERREUR. Mon codeur est trop con, il a pas su gérer cette erreur')
 
 
 
