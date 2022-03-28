@@ -24,7 +24,7 @@ async def on_ready():
 ################################################ Commandes Réponses #####################################################
 
 @client.command(name="chkoun",help="Qui est ... ?")
-async def chkounwldl97ba(ctx):
+async def qui(ctx):
     
     await ctx.send(''.join(random.choice(Usernames_debauche)))
 
