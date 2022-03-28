@@ -23,7 +23,7 @@ async def on_ready():
 
 ################################################ Commandes Réponses #####################################################
 
-@client.command(name="chkounwldl97ba",help="Qui est le plus gros fdp de ce groupe ?")
+@client.command(name="chkoun",help="Qui est ... ?")
 async def chkounwldl97ba(ctx):
     
     await ctx.send(''.join(random.choice(Usernames_debauche)))
@@ -32,9 +32,9 @@ async def chkounwldl97ba(ctx):
 async def cestle(ctx):
     await ctx.send('WAY WOOOOO')
 
-@client.command(name="chien",help="ouaf ouaf boula")
+@client.command(name="chien",help="ouaf ouaf ")
 async def chien(ctx):
-    rep =['pipi','ouaf ouaf boula']
+    rep =['pp','ouaf ouaf ']
     await ctx.send(''.join(random.choice(rep)))
 
 @client.command(name="teamlol",help="Les 5 mecs qui vont jouer")
@@ -49,9 +49,10 @@ async def supprimer(ctx, nombre_messages: int):
     for each_message in messages:
         await each_message.delete()
 
-@client.command(name="insulte",help="Insulte un mec du groupe")
+@client.command(name="l",help="l un mec du groupe")
 async def insulte(ctx, arg: str):
-    insultes = [arg + ' 97ba', arg + ' kathezou', arg + ' wld l97ba','Gangbang ' + arg + ' à 16h','gneu gneu gneu respire frère', 'Non jtm pas toi']
+    insultes = [arg + ' m', arg + ' l', arg + '5',
+                'gneu gneu gneu respire frère', 'Non jtm pas toi']
     await ctx.send(''.join(random.choice(insultes)))
 
 @client.command(name="eske",help="Est-ce que ... ?")
@@ -61,15 +62,8 @@ async def eske(ctx):
 
 @client.command(name="dinguerie",help="Balance une dinguerie")
 async def dinguerie(ctx):
-    dingueries = ['Je pisse sur tout le monde dans ce groupe à part Mouad, mon roi, mon créateur',
-              'Rappel du jour: Doxy est un être détestable qui va te rabaisser pour se sentir existant',
-              'Deuxième rappel du jour: Doxy vole les blagues de tout le monde pour se sentir drôle',
-              'Rappel du jour: Mangez 5 fruits et légumes par jour et pas 5 big mac pas vrai Amoket',
-              'Qui suis-je? Je suis un dictateur ayant vécu au 21ème siècle, je bande sur des filles mineures aux gros seins et je me moque des handicapés.\nEh non je suis pas Momosix. Je suis Utakata',
-              "Palmarès poupa: j'ai baisé un oreiller devant 10 personnes",
-              "Palmarès soulmore: j'ai zoulou 30 meufs hier pendant que biz filmait. Foutaises ",
-              "Thorwig, tu m'as créer à la place de rechercher un stage. C'est bien papa, tu sais déjà que tu vas redoubler comme l'autre con la",
-              "Bonjour, NEGRO SALE NEGRO KHANEZ NEGRO PUE YEKH"]
+    dingueries = ['d1',
+                 'd2']
     await ctx.send(''.join(random.choice(dingueries)))
 
 ################################################ Commandes musique #####################################################
@@ -107,7 +101,7 @@ async def play(ctx, url):
         voice.is_playing()
         await ctx.send('Ecoute ce banger')
     else:
-        await ctx.send("T'as déja de la musique.\nPq tu me casse les couilles")
+        await ctx.send("T'as déja de la musique.\nPq tu me ****")
         return
 
 @client.command(name='pause', help='Mettre en pause')
@@ -116,7 +110,7 @@ async def pause(ctx):
 
     if voice.is_playing():
         voice.pause()
-        await ctx.send("Me dis pas quoi faire fdp")
+        await ctx.send("Me dis pas quoi faire ")
     
 @client.command(name='resume', help='Continuer la musique')
 async def resume(ctx):
@@ -142,8 +136,8 @@ async def stop(ctx):
 @client.event
 async def on_command_error(ctx,error):
     if isinstance(error,commands.MissingRequiredArgument):
-        await ctx.send('ERREUR. Mon codeur est trop con, il a pas su gérer cette erreur')
+        await ctx.send("ERREUR. Mon codeur n'a pas su gérer cette erreur")
 
 
 
-client.run("OTMyMDUwOTk3MjYwNDc2NDQ2.YeNWIg.4lm4AGaTPAA4X4sNvN9NDRLcMaw")
+client.run(token.env)
